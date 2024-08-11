@@ -1,0 +1,102 @@
+---
+services:
+  gitea:
+    image: gitea/gitea:latest
+    container_name: gitea
+    restart: always
+    networks:
+      devsecopstoolnet:
+    volumes:
+      - gitea-data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "3000:3000"
+      - "222:22"
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+      - "9092:9092"
+    environment:
+      - SONARQUBE_JDBC_USERNAME=sonarqube
+      - SONARQUBE_JDBC_PASSWORD=sonarqube
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://postgres:5432/sonar
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      devsecopstoolnet:
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+  artifactory:
+    image: docker.bintray.io/jfrog/artifactory-oss:6.23.13
+    container_name: artifactory
+    ports:
+      - "9001:8081"
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    networks:
+      devsecopstoolnet:
+    volumes:
+      - artifactory-data:/var/opt/jfrog/artifactory
+    environment:
+      - DB_TYPE=postgresql
+     # The following must match the POSTGRES_USER and POSTGRES_PASSWORD values passed to PostgreSQL
+      - DB_USER=sonarqube
+      - DB_PASSWORD=sonarqube
+     # Add extra Java options by uncommenting the following line
+     #- EXTRA_JAVA_OPTIONS=-Xms512m -Xmx4g
+    restart: always
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000
+  nexus:
+    image: sonatype/nexus3:latest
+    container_name: nexus
+    restart: always
+    networks:
+      devsecopstoolnet:
+    volumes:
+      - "nexus-data:/sonatype-work"
+    ports:
+      - "9003:8081"
+      - "8085:8085"
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    networks:
+      devsecopstoolnet:
+    ports: 
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=sonarqube
+      - POSTGRES_PASSWORD=sonarqube
+    volumes:
+      - postgresql-data:/var/lib/postgresql
+networks:
+  devsecopstoolnet:
+    external: false
+volumes:
+  sonarqube_data:
+    driver: local
+  sonarqube_extensions:
+    driver: local
+  sonarqube_logs:
+    driver: local
+  artifactory-data:
+    driver: local 
+  postgresql-data:
+    driver: local
+  nexus-data: 
+    driver: local
+  gitea-data:
+    driver: local
+  
