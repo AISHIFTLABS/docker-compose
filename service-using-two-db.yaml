@@ -1,0 +1,32 @@
+listings-service-db:
+    image: postgres:latest
+    environment:
+        - POSTGRES_USER=admin
+        - POSTGRES_PASSWORD=admin1234
+        - POSTGRES_DB=listings
+    ports: 
+        - "5432:5432"
+    restart: always
+    volumes: 
+        - database-data-listing:/var/lib/postgresql/data/
+
+users-service:
+    build: "./users-service"
+    depends_on:
+        - users-service-db
+    ports: 
+        - "5433:5432"
+    volumes:
+        - ./users-service:/opt/app/  
+
+users-service-db:
+    image: postgres:latest
+    environment:
+        - POSTGRES_USER=admin
+        - POSTGRES_PASSWORD=admin1234
+        - POSTGRES_DB=users
+    ports: 
+        - "5433:5432"
+    restart: always
+    volumes: 
+        - database-data-users:/var/lib/postgresql/data/
