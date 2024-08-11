@@ -72,15 +72,30 @@ services:
   postgres:
     image: postgres:latest
     container_name: postgres
+    restart: unless-stopped
     networks:
       devsecopstoolnet:
     ports: 
       - "5432:5432"
     environment:
-      - POSTGRES_USER=sonarqube
-      - POSTGRES_PASSWORD=sonarqube
+      - POSTGRES_USER=${POSTGRES_USER:-sonarqube}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-sonarqube}
     volumes:
       - postgresql-data:/var/lib/postgresql
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-palutla@yahoo.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - devsecopstoolnet
+    restart: unless-stopped
 networks:
   devsecopstoolnet:
     external: false
@@ -94,6 +109,8 @@ volumes:
   artifactory-data:
     driver: local 
   postgresql-data:
+    driver: local
+  pgadmin-data:
     driver: local
   nexus-data: 
     driver: local
