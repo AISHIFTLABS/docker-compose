@@ -1,15 +1,80 @@
-version: '3.7'
-services:
-  postgres-db:
-    restart: always
-    image: postgres:latest
-    volumes:
-      - db-volume:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_USER=myusername
-      - POSTGRES_PASSWORD=mypassword
-      - POSTGRES_MULTIPLE_DATABASES=db1,db2
+mysql:
+  image: "mysql:8.0"
+  command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+  environment:
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_ROOT_HOST: "%"
+    MYSQL_DATABASE: db1
+    MORE_DATABASES: db2 db3
+  volumes:
+    - ./docker/provision/mysql/init/:/docker-entrypoint-initdb.d
+
+postgres:
+  image: "postgres:15"
+  environment:
+    POSTGRES_USER: dev
+    POSTGRES_PASSWORD: dev
+    POSTGRES_DB: db1
+    MORE_DATABASES: db2 db3
+  volumes:
+    - ./docker/provision/postgres/init/:/docker-entrypoint-initdb.d
 #    env_file:
 #      - ./db-prod.env
+
+Move following into a file
+docker/provision/mysql/init/01-create-more-databases-mysql.sh (for MYSQL)
+
+docker/provision/postgres/init/01-create-more-databases-postgres.sh (for POSTGRES)
+
+
+# Keep this file plain. Do not `chmod +x` to make it executable.
+
+docker/provision/mysql/init/01-create-more-databases-mysql.sh:
+#################
+create_more_databases() {
+    local databases=( $MORE_DATABASES )
+    local db
+    for db in "${databases[@]}"; do
+        mysql_note "Creating database ${db}"
+        docker_process_sql --database=mysql <<<"CREATE DATABASE IF NOT EXISTS \`$db\` ;"
+
+        if [ -n "$MYSQL_USER" ] && [ -n "$MYSQL_PASSWORD" ]; then
+            mysql_note "Giving user ${MYSQL_USER} access to schema ${db}"
+            docker_process_sql --database=mysql <<<"GRANT ALL ON \`${db//_/\\_}\`.* TO '$MYSQL_USER'@'%' ;"
+        
+        fi
+    done
+}
+
+if [ -n "$MORE_DATABASES" ]; then
+    create_more_databases
+fi
+
+##################
+
+docker/provision/postgres/init/01-create-more-databases-postgres.sh
+##################
+# Keep this file plain. Do not `chmod +x` to make it executable.
+
+create_more_databases() {
+    local databases=( $MORE_DATABASES )
+    local db
+    for db in "${databases[@]}"; do
+        POSTGRES_DB="$db" docker_setup_db
+    done
+}
+
+if [ -n "$MORE_DATABASES" ]; then
+    create_more_databases
+fi
+#################
+
+
+For more Documentation visit:
+
+https://stackoverflow.com/questions/39204142/docker-compose-with-multiple-databases
+
+https://github.com/mrts/docker-postgresql-multiple-databases
+
+
+
