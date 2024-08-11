@@ -1,0 +1,63 @@
+version: '3'
+services:
+
+ httpd:
+    container_name: webserver
+    build: ./webserver/
+    ports:
+        - 80:80
+    links:
+        - mysql
+        - mysql2
+    volumes_from:
+        - app
+   
+ mysql:
+    container_name: sqlserver
+    image: mysql:latest
+    ports:
+        - 3306:3306
+    volumes:
+        - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: dbname1
+        MYSQL_USER: dbuser
+        MYSQL_PASSWORD: dbpass
+    networks:
+      - app-network
+   
+ mysql2:
+    extends: mysql
+    container_name: sqlserver2
+    ports:
+        - 3307:3306
+    volumes:
+        - ./dump2.sql:/docker-entrypoint-initdb.d/dump.sql
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: dbname2
+        MYSQL_USER: dbuser
+        MYSQL_PASSWORD: dbpass
+   networks:
+      - app2-network
+
+ app:
+    container_name: webdata
+    image: php:latest
+    volumes:
+        - ../php:/var/www/html
+    command: "true"
+    networks:
+      - app-network
+      - app2-network
+
+#Docker Networks
+networks:
+  app-network:
+  app2-network:
+    driver: bridge
+#Volumes
+volumes:
+  dbdata:
+    driver: local
