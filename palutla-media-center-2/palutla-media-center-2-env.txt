@@ -10,6 +10,9 @@ SABNZBD_SERVER_DIR=/root/sabnzbd-server
 # Data location for storing media, downloads and configs for qbittorrent
 QBITTORRENT_SERVER_DIR=/root/qbittorrent-server
 
+# Data location for storing media, downloads and configs for bazarr
+BAZARR_SERVER_DIR=/root/bazarr-server
+
 # Timezone
 TIMEZONE=America/Chicago
 
@@ -26,3 +29,4 @@ DOMAIN=palutla.com
 SUB_DOMAIN_NZBGET=nzbget
 SUB_DOMAIN_SABNZBD=sabnzbd
 SUB_DOMAIN_QBITTORRENT=qbittorrent
+SUB_DOMAIN_BAZARR=bazarr
