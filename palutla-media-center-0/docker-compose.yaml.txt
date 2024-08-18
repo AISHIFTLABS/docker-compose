@@ -1,0 +1,109 @@
+services 
+  stirling-pdf
+    image frooodles-pdflatest
+    container_name server-stirling-pdf
+    networks
+      - frontend
+    restart unless-stopped
+    ports
+      - '90018080'
+    volumes
+      - rootstirling-pdf-servertrainingDatausrsharetessdata #Required for extra OCR languages
+      - rootstirling-pdf-serverextraConfigsconfigs
+      - rootstirling-pdf-servercustomFilescustomFiles
+      - rootstirling-pdf-serverlogslogs
+    environment
+      - DOCKER_ENABLE_SECURITY=false
+      - INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
+      - LANGS=en_US
+
+  navidrome
+    image deluannavidromelatest
+    container_name server-navidrome 
+    ports
+      - 90024533
+
+    environment
+      # Optional put your config options customization here. Examples
+      ND_SCANSCHEDULE 1h
+      ND_PORT 4533
+      ND_LOGLEVEL info  
+      ND_SESSIONTIMEOUT 24h
+      #ND_BASEURL tunnel.palutla.com
+    volumes
+      - rootaudiobookshelf-serverdatadata
+      - mntWDRED-4TBmusicmusicro
+      #- mntaudiobookshelf-servermusicmusicro
+    networks 
+      - frontend 
+    restart unless-stopped
+
+  audiobookshelf
+    container_name server-audiobook
+    image ghcr.ioadvplyraudiobookshelflatest
+    ports
+      - 900380
+    volumes
+      - rootaudiobookshelf-serveraudiobooksaudiobooks
+      - rootaudiobookshelf-serverconfigconfig
+      - rootaudiobookshelf-servermetadatametadata
+      - rootaudiobookshelf-serverpodcastspodcasts
+    restart unless-stopped
+    networks 
+      - frontend 
+    
+  calibre-web
+    container_name server-calibre-web
+    image johngongcalibre-weblatest
+    ports
+      - 90048083
+      - 90058080
+    volumes
+      - rootcalibre-serverconfigconfig
+      - rootcalibre-serverlibrarylibrary
+      - rootcalibre-serverautoaddbooksautoaddbooks
+    restart unless-stopped    
+    networks 
+      - frontend 
+      
+  nginx-proxy 
+    image 'jc21nginx-proxy-manager2.10.4' 
+    container_name nginx-proxy 
+    ports 
+      - '8080' 
+      - '443443' 
+      - '8181' 
+    environment 
+      DB_MYSQL_HOST mariadb 
+      DB_MYSQL_PORT 3306 
+      DB_MYSQL_USER npm 
+      DB_MYSQL_PASSWORD Q#GNTJ!E2vr4 
+      DB_MYSQL_NAME npm 
+      DISABLE_IPV6 'true' 
+    volumes 
+      - .datadata 
+      - .letsencryptetcletsencrypt 
+    depends_on 
+      - mariadb 
+    networks 
+      - frontend 
+    restart unless-stopped
+    
+  mariadb 
+    image 'jc21mariadb-arialatest' 
+    container_name nginx-proxy-database 
+    environment 
+      MYSQL_ROOT_PASSWORD 'Q#GNTJ!E2vr4' 
+      MYSQL_DATABASE 'npm' 
+      MYSQL_USER 'npm' 
+      MYSQL_PASSWORD 'Q#GNTJ!E2vr4' 
+      MARIADB_AUTO_UPGRADE '1' 
+    volumes 
+      - .mysqlvarlibmysql 
+    networks 
+      - frontend 
+    restart unless-stopped 
+ 
+networks 
+   frontend 
+     driver bridge 
