@@ -1,0 +1,45 @@
+# Containers prefix
+COMPOSE_PROJECT_NAME=palutla-media-center
+
+# Data location for storing media, downloads and configs for jellyfin
+JELLYFIN_DATA_DIR=/root/jellyfin-server/data
+JELLYFIN_SERVICES_DIR=/root/jellyfin-server/services
+
+# Data location for storing media, downloads and configs for transmission
+TRANSMISSION_DATA_DIR=/root/transmission-server/data
+TRANSMISSION_SERVICES_DIR=/root/transmission-server/services
+
+# Data location for storing media, downloads and configs
+RADARR_DATA_DIR=/root/radarr-server/data
+RADARR_SERVICES_DIR=/root/radarr-server/services
+
+# Data location for storing media, downloads and configs for sonarr
+SONARR_DATA_DIR=/root/sonarr-server/data
+SONARR_SERVICES_DIR=/root/sonarr-server/services
+
+# Data location for storing media, downloads and configs for prowlarr
+PROWLER_SERVICES_DIR=/root/prowlarr-server/services
+
+# Data location for storing media, downloads and configs for jellyseerr
+JELLYSEER_SERVICES_DIR=/root/jellyseerr-server/services
+
+
+# Timezone
+TIMEZONE=America/Chicago
+
+# Linux user/group ID for file permissions
+## User ID
+ENV_PUID=0
+## Group ID
+ENV_PGID=0
+
+# Domain
+DOMAIN=palutla.com
+
+# Subdomains for accessing services
+SUB_DOMAIN_JELLYFIN=jellyfin
+SUB_DOMAIN_TRANSMISSION=transmission
+SUB_DOMAIN_SONARR=sonarr
+SUB_DOMAIN_RADARR=radarr
+SUB_DOMAIN_PROWLARR=prowlarr
+SUB_DOMAIN_JELLYSEERR=jellyseerr
