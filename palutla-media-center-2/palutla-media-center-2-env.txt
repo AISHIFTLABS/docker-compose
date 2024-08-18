@@ -1,0 +1,28 @@
+# Containers prefix
+COMPOSE_PROJECT_NAME=palutla-media-center-2
+
+# Data location for storing media, downloads and configs for nzbget
+NZBGET_SERVER_DIR=/root/nzbget-server
+
+# Data location for storing media, downloads and configs for sabnzbd
+SABNZBD_SERVER_DIR=/root/sabnzbd-server
+
+# Data location for storing media, downloads and configs for qbittorrent
+QBITTORRENT_SERVER_DIR=/root/qbittorrent-server
+
+# Timezone
+TIMEZONE=America/Chicago
+
+# Linux user/group ID for file permissions
+## User ID
+ENV_PUID=0
+## Group ID
+ENV_PGID=0
+
+# Domain
+DOMAIN=palutla.com
+
+# Subdomains for accessing services
+SUB_DOMAIN_NZBGET=nzbget
+SUB_DOMAIN_SABNZBD=sabnzbd
+SUB_DOMAIN_QBITTORRENT=qbittorrent

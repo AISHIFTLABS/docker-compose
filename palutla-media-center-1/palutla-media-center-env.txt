@@ -1,5 +1,5 @@
 # Containers prefix
-COMPOSE_PROJECT_NAME=palutla-media-center
+COMPOSE_PROJECT_NAME=palutla-media-center-1
 
 # Data location for storing media, downloads and configs for jellyfin
 JELLYFIN_DATA_DIR=/root/jellyfin-server/data
@@ -23,6 +23,15 @@ PROWLER_SERVICES_DIR=/root/prowlarr-server/services
 # Data location for storing media, downloads and configs for jellyseerr
 JELLYSEER_SERVICES_DIR=/root/jellyseerr-server/services
 
+# Data location for storing media, downloads and configs for nzbget
+NZBGET_SERVER_DIR=/root/nzbget-server
+
+# Data location for storing media, downloads and configs for sabnzbd
+SABNZBD_SERVER_DIR=/root/sabnzbd-server
+
+# Data location for storing media, downloads and configs for qbittorrent
+QBITTORRENT_SERVER_DIR=/root/qbittorrent-server
+
 
 # Timezone
 TIMEZONE=America/Chicago
@@ -43,3 +52,6 @@ SUB_DOMAIN_SONARR=sonarr
 SUB_DOMAIN_RADARR=radarr
 SUB_DOMAIN_PROWLARR=prowlarr
 SUB_DOMAIN_JELLYSEERR=jellyseerr
+SUB_DOMAIN_NZBGET=nzbget
+SUB_DOMAIN_SABNZBD=sabnzbd
+SUB_DOMAIN_QBITTORRENT=qbittorrent

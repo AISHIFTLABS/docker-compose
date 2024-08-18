@@ -39,7 +39,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.dmc-jellyfin.rule=Host(`${SUB_DOMAIN_JELLYFIN}.${DOMAIN}`)"
       - "traefik.http.routers.dmc-jellyfin.tls=true"
-      - "traefik.http.services.dmc-jellyfin.loadbalancer.server.port=8096"
+      - "traefik.http.services.dmc-jellyfin.loadbalancer.server.port=9051"
       - "traefik.http.routers.dmc-jellyfin.tls.certresolver=letsencrypt"
       - "traefik.docker.network=global"
 
@@ -66,7 +66,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.dmc-transmission.rule=Host(`${SUB_DOMAIN_TRANSMISSION}.${DOMAIN}`)"
       - "traefik.http.routers.dmc-transmission.tls=true"
-      - "traefik.http.services.dmc-transmission.loadbalancer.server.port=9091"
+      - "traefik.http.services.dmc-transmission.loadbalancer.server.port=9059"
       - "traefik.http.routers.dmc-transmission.tls.certresolver=letsencrypt"
       - "traefik.docker.network=global"
       # Basic auth
@@ -94,7 +94,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.dmc-radarr.rule=Host(`${SUB_DOMAIN_RADARR}.${DOMAIN}`)"
       - "traefik.http.routers.dmc-radarr.tls=true"
-      - "traefik.http.services.dmc-radarr.loadbalancer.server.port=7878"
+      - "traefik.http.services.dmc-radarr.loadbalancer.server.port=9055"
       - "traefik.http.routers.dmc-radarr.tls.certresolver=letsencrypt"
       - "traefik.docker.network=global"
       # Basic auth
@@ -124,7 +124,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.dmc-sonarr.rule=Host(`${SUB_DOMAIN_SONARR}.${DOMAIN}`)"
       - "traefik.http.routers.dmc-sonarr.tls=true"
-      - "traefik.http.services.dmc-sonarr.loadbalancer.server.port=8989"
+      - "traefik.http.services.dmc-sonarr.loadbalancer.server.port=9056"
       - "traefik.http.routers.dmc-sonarr.tls.certresolver=letsencrypt"
       - "traefik.docker.network=global"
       # Basic auth
@@ -151,7 +151,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.dmc-prowlarr.rule=Host(`${SUB_DOMAIN_PROWLARR}.${DOMAIN}`)"
       - "traefik.http.routers.dmc-prowlarr.tls=true"
-      - "traefik.http.services.dmc-prowlarr.loadbalancer.server.port=9696"
+      - "traefik.http.services.dmc-prowlarr.loadbalancer.server.port=9057"
       - "traefik.http.routers.dmc-prowlarr.tls.certresolver=letsencrypt"
       - "traefik.docker.network=global"
       # Basic auth
@@ -177,6 +177,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.dmc-jellyseerr.rule=Host(`${SUB_DOMAIN_JELLYSEERR}.${DOMAIN}`)"
       - "traefik.http.routers.dmc-jellyseerr.tls=true"
-      - "traefik.http.services.dmc-jellyseerr.loadbalancer.server.port=5055"
+      - "traefik.http.services.dmc-jellyseerr.loadbalancer.server.port=9058"
       - "traefik.http.routers.dmc-jellyseerr.tls.certresolver=letsencrypt"
       - "traefik.docker.network=global"

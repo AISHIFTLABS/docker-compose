@@ -1,0 +1,84 @@
+version: "3.7"
+
+networks:
+#  global:
+#    external: true
+#  local:
+#    external: false
+   frontend: 
+     driver: bridge
+
+services:
+
+  nzbget:
+    image: ghcr.io/linuxserver/nzbget
+    container_name: server-nzbget
+    environment:
+      - TZ={TIMEZONE}
+    volumes:
+      - ${NZBGET_SERVER_DIR}/config:/config
+      - ${NZBGET_SERVER_DIR}/downloads:/downloads
+    networks:
+      #- global
+      #- local
+      - frontend
+    ports:
+      - 9059:6789
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dmc-nzbget.rule=Host(`${SUB_DOMAIN_NZBGET}.${DOMAIN}`)"
+      - "traefik.http.routers.dmc-nzbget.tls=true"
+      - "traefik.http.services.dmc-nzbget.loadbalancer.server.port=9059"
+      - "traefik.http.routers.dmc-nzbget.tls.certresolver=letsencrypt"
+      - "traefik.docker.network=global"
+  sabnzbd:
+    image: ghcr.io/linuxserver/sabnzbd
+    container_name: server-sabnzbd
+    environment:
+      - TZ={TIMEZONE}
+    volumes:
+      - ${SABNZBD_SERVER_DIR}/config:/config
+      - ${SABNZBD_SERVER_DIR}/downloads:/downloads
+      - ${SABNZBD_SERVER_DIR}/downloads/incomplete-download:/incomplete-download
+    networks:
+      #- global
+      #- local
+      - frontend
+   ports:
+      - 9061:8080
+      - 9062:9090
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dmc-sabnzbd.rule=Host(`${SUB_DOMAIN_SABNZBD}.${DOMAIN}`)"
+      - "traefik.http.routers.dmc-sabnzbd.tls=true"
+      - "traefik.http.services.dmc-sabnzbd.loadbalancer.server.port=9061"
+      - "traefik.http.routers.dmc-sabnzbd.tls.certresolver=letsencrypt"
+      - "traefik.docker.network=global"
+  qbittorrent:
+    image: linuxserver/qbittorrent
+    container_name: server-qbittorrent
+    environment:
+      - UMASK_SET=022
+      - WEBUI_PORT=15080
+    volumes:
+      - ${QBITTORRENT_SERVER_DIR}/config:/config
+      - ${QBITTORRENT_SERVER_DIR}/downloads:/downloads
+    networks:
+      #- global
+      #- local
+      - frontend
+    ports:
+      - 9060:6881
+      - 9060:6881/udp
+      - 15080:15080
+      - 1080:1080
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dmc-qbittorrent.rule=Host(`${SUB_DOMAIN_QBITTORRENT}.${DOMAIN}`)"
+      - "traefik.http.routers.dmc-qbittorrent.tls=true"
+      - "traefik.http.services.dmc-qbittorrent.loadbalancer.server.port=9060"
+      - "traefik.http.routers.dmc-qbittorrent.tls.certresolver=letsencrypt"
+      - "traefik.docker.network=global"
